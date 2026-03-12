@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caffeine Coders — AI-Powered Full Stack</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;600;700;800&family=Share+Tech+Mono&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+  <style>
+    :root[data-theme="dark"] {
+      --bg:#080c10;--bg2:#0d1117;--card:#111722;--border:#1e2d40;
+      --accent:#0088ff;--accent2:#ff6b35;--accent3:#7c3aed;
+      --text:#e8edf5;--muted:#6b7a8d;
+      --glow:0 0 40px rgba(0,136,255,0.18);
+      --marquee-color:rgba(0,136,255,0.07);
+    }
+    :root[data-theme="light"] {
+      --bg:#f0f4ff;--bg2:#ffffff;--card:#ffffff;--border:#d1dae8;
+      --accent:#0077ff;--accent2:#ff4500;--accent3:#6d28d9;
+      --text:#0d1117;--muted:#6b7a8d;
+      --glow:0 4px 30px rgba(0,119,255,0.12);
+      --marquee-color:rgba(0,119,255,0.06);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;transition:background .4s,color .4s}
+
+    /* ── MARQUEE BG ── */
+    .marquee-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;overflow:hidden}
+    .marquee-row{display:flex;white-space:nowrap;animation:marquee-left 30s linear infinite;line-height:1}
+    .marquee-row:nth-child(even){animation:marquee-right 35s linear infinite}
+    .marquee-row span{font-family:'Poppins',sans-serif;font-size:1.1rem;font-weight:600;color:var(--marquee-color);padding:0 2rem;letter-spacing:.08em;text-transform:uppercase}
+    @keyframes marquee-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    @keyframes marquee-right{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;width:100%;z-index:100;backdrop-filter:blur(20px);background:rgba(8,12,16,.8);border-bottom:1px solid var(--border);transition:background .4s}
+    [data-theme="light"] nav{background:rgba(240,244,255,.85)}
+    .nav-inner{max-width:1280px;margin:auto;padding:0 2rem;height:68px;display:flex;align-items:center;justify-content:space-between}
+    .nav-links{display:flex;gap:2rem;list-style:none}
+    .nav-links a{font-family:'Poppins',sans-serif;font-size:.78rem;text-decoration:none;color:var(--text);transition:color .2s;text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:.4rem}
+    .nav-links a i{font-size:.75rem}
+    .nav-links a:hover{color:var(--accent)}
+    .theme-btn{background:var(--card);border:1px solid var(--border);border-radius:50px;padding:.4rem 1rem;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.75rem;color:var(--text);display:flex;align-items:center;gap:.5rem;transition:all .2s}
+    .theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* ── HERO ── */
+    .hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 4rem}
+    .hero-content{max-width:900px}
+    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--card);border:1px solid var(--border);border-radius:50px;padding:.4rem 1.2rem;font-family:'Poppins',sans-serif;font-size:.75rem;color:var(--text);margin-bottom:2rem;animation:fadeUp .6s ease both}
+    .badge-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .hero h1{font-family:'Oxanium',sans-serif;font-size:clamp(3rem,8vw,6.5rem);font-weight:800;line-height:1;letter-spacing:-.03em;animation:fadeUp .7s ease .1s both}
+    .hero h1 .highlight{background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .hero p{margin:1.5rem auto;max-width:580px;font-size:1.1rem;color:var(--muted);line-height:1.8;animation:fadeUp .7s ease .2s both;font-weight:400}
+    .hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUp .7s ease .3s both}
+    .btn-primary{background:var(--accent);color:#fff;font-weight:700;padding:.85rem 2.2rem;border-radius:8px;border:none;cursor:pointer;font-size:.95rem;font-family:'Oxanium',sans-serif;transition:all .2s;box-shadow:0 0 20px rgba(0,136,255,.3);display:inline-flex;align-items:center;gap:.5rem;text-decoration:none}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(0,136,255,.5)}
+    .btn-outline{background:transparent;color:var(--text);padding:.85rem 2.2rem;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:.95rem;font-family:'Oxanium',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:.5rem;text-decoration:none}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* ── STATS ── */
+    .stats-bar{position:relative;z-index:1;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);padding:2.5rem 2rem}
+    .stats-inner{max-width:1000px;margin:auto;display:flex;justify-content:space-around;flex-wrap:wrap;gap:2rem}
+    .stat{text-align:center;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+    .stat-icon{font-size:1.4rem;color:var(--accent);opacity:.7}
+    .stat-num{font-family:'Oxanium',sans-serif;font-size:2.6rem;font-weight:800;color:var(--accent);line-height:1}
+    .stat-label{font-family:'Poppins',sans-serif;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+
+    /* ── SECTIONS ── */
+    section{position:relative;z-index:1;padding:6rem 2rem}
+    .section-inner{max-width:1280px;margin:auto}
+    .section-label{font-family:'Poppins',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);margin-bottom:.8rem;display:flex;align-items:center;gap:.4rem}
+    .section-title{font-family:'Oxanium',sans-serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.02em;margin-bottom:1rem}
+    .section-sub{color:var(--muted);max-width:520px;line-height:1.8;margin-bottom:3.5rem;font-size:.97rem}
+
+    /* ── ABOUT / FEATURES ── */
+    .ai-section{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+    .feature-list{display:flex;flex-direction:column;gap:1.2rem}
+    .feature-item{display:flex;gap:1rem;align-items:flex-start;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;transition:all .25s}
+    .feature-item:hover{border-color:var(--accent);transform:translateX(4px)}
+    .feature-icon-wrap{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,rgba(0,136,255,.12),rgba(124,58,237,.08));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;color:var(--accent)}
+    .feature-text h4{font-family:'Oxanium',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:.3rem}
+    .feature-text p{font-size:.85rem;color:var(--muted);line-height:1.6}
+
+    /* ── TERMINAL ── */
+    .terminal{background:#0a0e14;border:1px solid var(--border);border-radius:12px;padding:1.5rem;font-family:'Poppins',sans-serif;font-size:.82rem;line-height:1.8;max-width:480px}
+    [data-theme="light"] .terminal{background:#1a1f2e}
+    .terminal-bar{display:flex;gap:.4rem;margin-bottom:1rem;align-items:center}
+    .t-dot{width:12px;height:12px;border-radius:50%}
+    .t-red{background:#ff5f57}.t-yellow{background:#ffbd2e}.t-green{background:#28ca41}
+    .t-title{font-family:'Poppins',sans-serif;font-size:.7rem;color:#6b7a8d;margin-left:auto}
+    .t-line .prompt{color:#0088ff}.t-line .cmd{color:#e8edf5}.t-line .out{color:#6b7a8d}
+    .t-line .success{color:#28ca41}.t-line .warn{color:#ffbd2e}
+    .cursor{display:inline-block;width:8px;height:1.1em;background:var(--accent);animation:blink 1s infinite;vertical-align:middle}
+    @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+
+    /* ── TECH STACK ── */
+    #tech{background:var(--bg2)}
+    .tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:1.2rem}
+    .tech-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1rem;text-align:center;cursor:default;transition:all .25s;position:relative;overflow:hidden}
+    .tech-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent) 0%,transparent 60%);opacity:0;transition:opacity .3s}
+    .tech-card:hover{border-color:var(--accent);transform:translateY(-5px);box-shadow:var(--glow)}
+    .tech-card:hover::before{opacity:.06}
+    .tech-icon{font-size:2rem;margin-bottom:.6rem;color:var(--accent)}
+    .tech-name{font-family:'Oxanium',sans-serif;font-size:.82rem;font-weight:700;color:var(--text)}
+    .tech-cat{font-size:.68rem;color:var(--muted);margin-top:.15rem;font-family:'Poppins',sans-serif}
+    .stack-category{display:flex;align-items:center;gap:.8rem;margin-bottom:1.5rem;margin-top:2.5rem}
+    .cat-chip{font-family:'Poppins',sans-serif;font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;padding:.3rem .9rem;border-radius:50px;border:1px solid var(--border);color:var(--muted);display:flex;align-items:center;gap:.4rem}
+    .cat-chip i{color:var(--accent);font-size:.7rem}
+    .cat-line{flex:1;height:1px;background:var(--border)}
+
+    /* ── PROJECTS ── */
+    .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.5rem}
+    .project-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s}
+    .project-card:hover{border-color:var(--accent);transform:translateY(-6px);box-shadow:var(--glow)}
+    .project-thumb{height:190px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;position:relative;overflow:hidden}
+    .project-thumb i{font-size:3.5rem;color:var(--accent);opacity:.5;position:relative;z-index:1}
+    .project-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--card))}
+    .project-body{padding:1.5rem}
+    .project-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem}
+    .tag{font-family:'Poppins',sans-serif;font-size:.62rem;padding:.2rem .7rem;border-radius:50px;border:1px solid var(--border);color:var(--accent);background:rgba(0,136,255,.05)}
+    [data-theme="light"] .tag{background:rgba(0,119,255,.06)}
+    .project-title{font-family:'Oxanium',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:.5rem}
+    .project-desc{font-size:.875rem;color:var(--muted);line-height:1.65}
+    .project-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .project-link{font-family:'Poppins',sans-serif;font-size:.72rem;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:.4rem;transition:gap .2s}
+    .project-link:hover{gap:.7rem}
+    .project-meta{display:flex;align-items:center;gap:.8rem;font-size:.78rem;color:var(--muted)}
+    .project-meta span{display:flex;align-items:center;gap:.3rem}
+
+    /* ── REVIEWS ── */
+    #reviews{background:var(--bg2)}
+    .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}
+    .review-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .3s}
+    .review-card:hover{border-color:var(--accent3);box-shadow:0 0 30px rgba(124,58,237,.12)}
+    .review-quote-icon{font-size:1.8rem;color:var(--accent);opacity:.5;margin-bottom:.6rem}
+    .review-text{font-size:.92rem;line-height:1.75;color:var(--text);margin-bottom:1.5rem}
+    .review-author{display:flex;align-items:center;gap:.8rem}
+    .author-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:2px solid var(--border);background:var(--bg2)}
+    .author-name{font-family:'Oxanium',sans-serif;font-size:.9rem;font-weight:700}
+    .author-role{font-size:.73rem;color:var(--muted);font-family:'Poppins',sans-serif}
+    .stars{color:#f59e0b;font-size:.8rem;margin-bottom:.4rem;letter-spacing:.1em}
+
+    /* ── CONTACT ── */
+    #contact{background:var(--bg2)}
+
+    /* ── FOOTER ── */
+    footer{position:relative;z-index:1;background:var(--bg);border-top:1px solid var(--border);padding:5rem 2rem 2rem;overflow:hidden}
+    .footer-marquee-bg{position:absolute;bottom:0;left:0;width:100%;overflow:hidden;opacity:.35;pointer-events:none}
+    .footer-marquee-text{font-family:'Oxanium',sans-serif;font-weight:800;font-size:clamp(4rem,12vw,10rem);color:transparent;-webkit-text-stroke:1px var(--border);white-space:nowrap;animation:marquee-left 20s linear infinite;display:inline-block}
+    .footer-inner{max-width:1280px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+    .footer-brand p{font-size:.88rem;color:var(--muted);line-height:1.75;max-width:280px;margin-top:.8rem}
+    .footer-col h4{font-family:'Oxanium',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:1.2rem;letter-spacing:.02em;display:flex;align-items:center;gap:.5rem}
+    .footer-col h4 i{color:var(--accent);font-size:.85rem}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.7rem}
+    .footer-col ul a{font-size:.85rem;color:var(--muted);text-decoration:none;transition:color .2s;display:flex;align-items:center;gap:.5rem;cursor:pointer}
+    .footer-col ul a i{font-size:.72rem;color:var(--accent);opacity:.6;width:12px}
+    .footer-col ul a:hover{color:var(--accent)}
+    .footer-bottom{max-width:1280px;margin:auto;padding-top:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+    .footer-bottom p{font-size:.8rem;color:var(--muted)}
+    .social-links{display:flex;gap:.7rem}
+    .social-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--muted);text-decoration:none;transition:all .2s;cursor:pointer}
+    .social-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .fade-in{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+    .fade-in.visible{opacity:1;transform:translateY(0)}
+    .scroll-line{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent3));z-index:999;transition:width .1s}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){.ai-section{grid-template-columns:1fr;gap:3rem}}
+    @media(max-width:768px){.footer-inner{grid-template-columns:1fr 1fr}.nav-links{display:none}.tech-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}}
+    @media(max-width:480px){.footer-inner{grid-template-columns:1fr}}
+
+    /* ══════════════════════════════════════════════
+       ── SPA COMPANY PAGES ──
+    ══════════════════════════════════════════════ */
+    .company-page{
+      display:none;
+      position:relative;
+      z-index:1;
+      min-height:100vh;
+      padding-top:68px;
+      animation:fadePageIn .4s ease;
+    }
+    .company-page.active{display:block}
+    @keyframes fadePageIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    /* Page hero */
+    .cp-hero{padding:4rem 2rem 3rem;background:var(--bg2);border-bottom:1px solid var(--border)}
+    .cp-hero-inner{max-width:1100px;margin:auto}
+    .cp-breadcrumb{font-family:'Poppins',sans-serif;font-size:.7rem;color:var(--muted);display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;text-transform:uppercase;letter-spacing:.08em}
+    .cp-breadcrumb a{color:var(--accent);cursor:pointer;text-decoration:none}
+    .cp-breadcrumb a:hover{text-decoration:underline}
+    .cp-title{font-family:'Oxanium',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.7rem;line-height:1.05}
+    .cp-title .hl{background:linear-gradient(135deg,var(--accent),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .cp-sub{color:var(--muted);font-size:.97rem;line-height:1.75;max-width:540px}
+
+    /* Page content */
+    .cp-body{max-width:1100px;margin:auto;padding:3.5rem 2rem 6rem}
+
+    /* Cards */
+    .cp-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all .3s;margin-bottom:1.2rem}
+    .cp-card:hover{border-color:var(--accent);box-shadow:var(--glow)}
+    .cp-card h3{font-family:'Oxanium',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+    .cp-card h3 i{color:var(--accent)}
+    .cp-card p,.cp-card li{font-size:.9rem;color:var(--muted);line-height:1.8}
+    .cp-card ul{padding-left:1.2rem;display:flex;flex-direction:column;gap:.4rem}
+
+    /* Section label */
+    .cp-label{font-family:'Poppins',sans-serif;font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+    .cp-section-title{font-family:'Oxanium',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:.8rem}
+
+    /* Grid layouts */
+    .cp-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+    .cp-grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem}
+    @media(max-width:700px){.cp-grid-2{grid-template-columns:1fr}.cp-grid-3{grid-template-columns:1fr}}
+
+    /* Job card */
+    .job-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem;transition:all .3s}
+    .job-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:var(--glow)}
+    .job-title{font-family:'Oxanium',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.25rem}
+    .job-dept{font-family:'Poppins',sans-serif;font-size:.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem}
+    .job-badges{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.8rem}
+    .jbadge{font-family:'Poppins',sans-serif;font-size:.62rem;padding:.22rem .7rem;border-radius:50px;border:1px solid var(--border)}
+    .jbadge.remote{color:#28ca41;border-color:rgba(40,202,65,.3);background:rgba(40,202,65,.06)}
+    .jbadge.full{color:var(--accent);border-color:rgba(0,136,255,.3);background:rgba(0,136,255,.06)}
+    .jbadge.contract{color:#ffbd2e;border-color:rgba(255,189,46,.3);background:rgba(255,189,46,.06)}
+    .job-desc{font-size:.88rem;color:var(--muted);line-height:1.7;margin-bottom:1rem}
+    .skill-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+    .skill-tag{font-family:'Poppins',sans-serif;font-size:.62rem;padding:.18rem .6rem;border-radius:6px;background:rgba(0,136,255,.06);border:1px solid var(--border);color:var(--text)}
+
+    /* Contact form */
+    .cf-group{margin-bottom:1.2rem}
+    .cf-group label{display:block;font-family:'Poppins',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.5rem}
+    .cf-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;font-family:'Nunito',sans-serif;font-size:.9rem;color:var(--text);transition:border-color .2s;outline:none}
+    .cf-input:focus{border-color:var(--accent)}
+    .cf-input::placeholder{color:var(--muted)}
+    textarea.cf-input{resize:vertical;min-height:130px}
+
+    /* Team card */
+    .team-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.8rem;text-align:center;transition:all .3s}
+    .team-card:hover{border-color:var(--accent);transform:translateY(-6px);box-shadow:var(--glow)}
+    .team-avatar{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,rgba(0,136,255,.15),rgba(124,58,237,.12));border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.9rem;margin:0 auto .9rem}
+    .team-name{font-family:'Oxanium',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.2rem}
+    .team-role{font-family:'Poppins',sans-serif;font-size:.68rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.7rem}
+    .team-bio{font-size:.83rem;color:var(--muted);line-height:1.6}
+
+    /* Value card */
+    .val-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;display:flex;gap:.9rem;align-items:flex-start;transition:all .25s}
+    .val-card:hover{border-color:var(--accent)}
+    .val-icon{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,rgba(0,136,255,.12),rgba(124,58,237,.08));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--accent);flex-shrink:0}
+    .val-text h4{font-family:'Oxanium',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.25rem}
+    .val-text p{font-size:.82rem;color:var(--muted);line-height:1.6}
+
+    /* Perks */
+    .perk-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;display:flex;gap:.8rem;align-items:flex-start;transition:all .25s}
+    .perk-card:hover{border-color:var(--accent)}
+    .perk-icon{color:var(--accent);font-size:1.1rem;margin-top:.1rem;flex-shrink:0}
+    .perk-text h4{font-family:'Oxanium',sans-serif;font-weight:700;font-size:.86rem;margin-bottom:.2rem}
+    .perk-text p{font-size:.8rem;color:var(--muted);line-height:1.5}
+
+    /* Terms sections */
+    .terms-section{margin-bottom:2.5rem;padding-bottom:2.5rem;border-bottom:1px solid var(--border)}
+    .terms-section:last-child{border-bottom:none}
+    .terms-section h3{font-family:'Oxanium',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;color:var(--text)}
+    .terms-section h3 i{color:var(--accent)}
+    .terms-section p{font-size:.88rem;color:var(--muted);line-height:1.85;margin-bottom:.7rem}
+    .terms-section ul{padding-left:1.2rem;display:flex;flex-direction:column;gap:.4rem}
+    .terms-section ul li{font-size:.88rem;color:var(--muted);line-height:1.7}
+
+    /* Payment highlight box */
+    .pay-box{background:linear-gradient(135deg,rgba(0,136,255,.08),rgba(124,58,237,.06));border:1px solid var(--accent);border-radius:14px;padding:1.8rem;margin:2rem 0}
+    .pay-box h3{font-family:'Oxanium',sans-serif;font-weight:800;font-size:1.15rem;color:var(--accent);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+    .pay-steps{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    @media(max-width:600px){.pay-steps{grid-template-columns:1fr}}
+    .pay-step{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;position:relative}
+    .pay-step-num{font-family:'Oxanium',sans-serif;font-size:2.5rem;font-weight:800;color:var(--accent);opacity:.15;position:absolute;top:.5rem;right:1rem;line-height:1}
+    .pay-step h4{font-family:'Oxanium',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:.4rem;position:relative;z-index:1}
+    .pay-step p{font-size:.83rem;color:var(--muted);line-height:1.6;position:relative;z-index:1}
+    .pay-step .amt{font-family:'Poppins',sans-serif;font-size:1.3rem;color:var(--accent);font-weight:700;display:block;margin-top:.4rem}
+
+    /* Privacy */
+    .priv-section{margin-bottom:2.2rem;padding-bottom:2.2rem;border-bottom:1px solid var(--border)}
+    .priv-section:last-child{border-bottom:none}
+    .priv-section h3{font-family:'Oxanium',sans-serif;font-weight:700;font-size:1rem;margin-bottom:.7rem;color:var(--text);display:flex;align-items:center;gap:.5rem}
+    .priv-section h3 i{color:var(--accent)}
+    .priv-section p,.priv-section li{font-size:.88rem;color:var(--muted);line-height:1.85}
+    .priv-section ul{padding-left:1.2rem;display:flex;flex-direction:column;gap:.4rem}
+
+    /* CTA strip */
+    .cta-strip{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:2.5rem;text-align:center;margin-top:3rem}
+    .cta-strip h2{font-family:'Oxanium',sans-serif;font-weight:800;font-size:1.6rem;margin-bottom:.5rem}
+    .cta-strip p{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+    .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+    /* Logo in company page nav */
+    .logo-txt{font-family:'Oxanium',sans-serif;font-weight:800;font-size:1.4rem;color:var(--accent);letter-spacing:-.01em;display:flex;align-items:center;gap:.5rem;cursor:pointer;text-decoration:none}
+    .logo-txt span{color:var(--text)}
+
+    /* Fade util */
+    .spa-fade{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+    .spa-fade.on{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+<body>
+
+<div class="scroll-line" id="scrollLine"></div>
+<div class="marquee-bg" aria-hidden="true" id="marqueeBg"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <!-- Logo -->
+     <a href="#">
+        <div class="logo flex items-center gap-2 font-['Oxanium'] font-extrabold text-[1.4rem] tracking-tight whitespace-nowrap">
+    
+    <img src="images/cflogo.png" 
+         alt="CaffeineCoders" 
+         class="h-10 w-10 md:h-12 md:w-12 shrink-0 object-contain">
+
+    <span class="text-[var(--text)]">Caffeine</span>
+    <span class="text-[var(--accent)]">Coders</span>
+</div></a>
+    
+    <ul class="nav-links">
+      <li><a href="#about" onclick="goHome();setTimeout(()=>scrollTo('about'),300)"><i class="fa-solid fa-circle-info"></i> About</a></li>
+      <li><a href="#tech" onclick="goHome();setTimeout(()=>scrollTo('tech'),300)"><i class="fa-solid fa-layer-group"></i> Tech Stack</a></li>
+      <li><a href="#projects" onclick="goHome();setTimeout(()=>scrollTo('projects'),300)"><i class="fa-solid fa-code-branch"></i> Projects</a></li>
+      <li><a href="#reviews" onclick="goHome();setTimeout(()=>scrollTo('reviews'),300)"><i class="fa-solid fa-star"></i> Reviews</a></li>
+      <li><a href="#contact-section" onclick="showPage('contact');return false"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+    </ul>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">
+      <i id="themeIcon" class="fa-solid fa-moon"></i>
+      <span id="themeLabel">Dark</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     MAIN PAGE CONTENT (all original code preserved)
+══════════════════════════════════════════════ -->
+<div id="main-content">
+
+<!-- ── HERO ── -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      <i class="fa-solid fa-robot" style="font-size:.7rem"></i>
+      AI-Powered Full Stack Development
+    </div>
+    <h1>We Build <span class="highlight">Intelligent</span><br/>Digital Products</h1>
+    <p>Caffeine Coders crafts high-performance full-stack applications supercharged with AI — from smart APIs to reactive UIs, we ship code that matters.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> View Our Work
+      </button>
+      <button class="btn-outline" onclick="document.getElementById('tech').scrollIntoView({behavior:'smooth'})">
+        <i class="fa-solid fa-layer-group"></i> Tech Stack
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat"><i class="fa-solid fa-rocket stat-icon"></i><div class="stat-num" data-target="120">0+</div><div class="stat-label">Projects Shipped</div></div>
+    <div class="stat"><i class="fa-solid fa-users stat-icon"></i><div class="stat-num" data-target="47">0+</div><div class="stat-label">Happy Clients</div></div>
+    <div class="stat"><i class="fa-solid fa-server stat-icon"></i><div class="stat-num" data-target="99" data-suffix="%">0</div><div class="stat-label">Uptime SLA</div></div>
+    <div class="stat"><i class="fa-solid fa-user-gear stat-icon"></i><div class="stat-num" data-target="6">0</div><div class="stat-label">Core Engineers</div></div>
+  </div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="ai-section">
+      <div class="fade-in">
+        <p class="section-label"><i class="fa-solid fa-circle-dot"></i> What we do</p>
+        <h2 class="section-title">AI-Native<br/>Development Studio</h2>
+        <p class="section-sub">We don't just write code — we architect intelligent systems. Every product we build leverages the latest in machine learning, LLMs, and modern cloud infrastructure.</p>
+        <div class="feature-list">
+          <div class="feature-item"><div class="feature-icon-wrap"><i class="fa-solid fa-brain"></i></div><div class="feature-text"><h4>LLM Integration</h4><p>Embed GPT-4, Claude, Gemini and open-source models into your product workflows seamlessly.</p></div></div>
+          <div class="feature-item"><div class="feature-icon-wrap"><i class="fa-solid fa-bolt"></i></div><div class="feature-text"><h4>Real-Time Architecture</h4><p>WebSocket-first backends, event-driven microservices, and sub-100ms response times.</p></div></div>
+          <div class="feature-item"><div class="feature-icon-wrap"><i class="fa-solid fa-shield-halved"></i></div><div class="feature-text"><h4>Security-First</h4><p>Zero-trust infrastructure, end-to-end encryption, and SOC 2 compliant deployments.</p></div></div>
+          <div class="feature-item"><div class="feature-icon-wrap"><i class="fa-solid fa-chart-line"></i></div><div class="feature-text"><h4>Scalable by Default</h4><p>Kubernetes-orchestrated, auto-scaling microservices from 100 to 10M users.</p></div></div>
+        </div>
+      </div>
+      <div class="fade-in">
+        <div class="terminal">
+          <div class="terminal-bar"><div class="t-dot t-red"></div><div class="t-dot t-yellow"></div><div class="t-dot t-green"></div><span class="t-title">~ caffeine-coders</span></div>
+          <div class="t-line"><span class="prompt">$ </span><span class="cmd">npx create-cc-app my-project</span></div>
+          <div class="t-line"><span class="out">  ◆ Caffeine Coders v3.2.0</span></div>
+          <div class="t-line"><span class="out">  ✓ Scaffolding Next.js 14...</span></div>
+          <div class="t-line"><span class="out">  ✓ Setting up Prisma ORM...</span></div>
+          <div class="t-line"><span class="out">  ✓ Configuring tRPC layer...</span></div>
+          <div class="t-line"><span class="out">  ✓ Mounting AI middleware...</span></div>
+          <div class="t-line"><span class="success">  ✅ Project ready in 2.3s</span></div>
+          <div class="t-line">&nbsp;</div>
+          <div class="t-line"><span class="prompt">$ </span><span class="cmd">npm run dev</span></div>
+          <div class="t-line"><span class="warn">  → Local:   http://localhost:3000</span></div>
+          <div class="t-line"><span class="warn">  → AI API:  http://localhost:3001</span></div>
+          <div class="t-line"><span class="prompt">$ </span><span class="cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TECH STACK ── -->
+<section id="tech">
+  <div class="section-inner">
+    <p class="section-label"><i class="fa-solid fa-circle-dot"></i> Our arsenal</p>
+    <h2 class="section-title">Tech Stack</h2>
+    <p class="section-sub">Battle-tested tools and modern frameworks we use to build production-grade systems.</p>
+    <div class="stack-category fade-in"><span class="cat-chip"><i class="fa-solid fa-desktop"></i> Frontend</span><div class="cat-line"></div></div>
+    <div class="tech-grid fade-in">
+      <div class="tech-card"><div class="tech-icon"><i class="fa-brands fa-react"></i></div><div class="tech-name">React</div><div class="tech-cat">UI Library</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-triangle-exclamation" style="color:var(--text)"></i></div><div class="tech-name">Next.js</div><div class="tech-cat">Framework</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-brands fa-js"></i></div><div class="tech-name">TypeScript</div><div class="tech-cat">Language</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-paintbrush"></i></div><div class="tech-name">Tailwind CSS</div><div class="tech-cat">Styling</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><div class="tech-name">Framer Motion</div><div class="tech-cat">Animation</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-cubes"></i></div><div class="tech-name">Zustand</div><div class="tech-cat">State Mgmt</div></div>
+    </div>
+    <div class="stack-category fade-in"><span class="cat-chip"><i class="fa-solid fa-server"></i> Backend</span><div class="cat-line"></div></div>
+    <div class="tech-grid fade-in">
+      <div class="tech-card"><div class="tech-icon"><i class="fa-brands fa-node-js"></i></div><div class="tech-name">Node.js</div><div class="tech-cat">Runtime</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-fire-flame-curved"></i></div><div class="tech-name">Bun</div><div class="tech-cat">Runtime</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-link"></i></div><div class="tech-name">tRPC</div><div class="tech-cat">Type-Safe API</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-brands fa-python"></i></div><div class="tech-name">Python</div><div class="tech-cat">AI / ML</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-plug"></i></div><div class="tech-name">FastAPI</div><div class="tech-cat">API Framework</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-circle-dot" style="color:#e0474c"></i></div><div class="tech-name">Redis</div><div class="tech-cat">Caching</div></div>
+    </div>
+    <div class="stack-category fade-in"><span class="cat-chip"><i class="fa-solid fa-database"></i> Database</span><div class="cat-line"></div></div>
+    <div class="tech-grid fade-in">
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-elephant"></i></div><div class="tech-name">PostgreSQL</div><div class="tech-cat">Relational DB</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-leaf"></i></div><div class="tech-name">MongoDB</div><div class="tech-cat">Document DB</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-triangle-exclamation" style="color:#5a67d8"></i></div><div class="tech-name">Prisma</div><div class="tech-cat">ORM</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-water"></i></div><div class="tech-name">Supabase</div><div class="tech-cat">BaaS</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div><div class="tech-name">Pinecone</div><div class="tech-cat">Vector DB</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-fire" style="color:#ff6d00"></i></div><div class="tech-name">Firebase</div><div class="tech-cat">Realtime DB</div></div>
+    </div>
+    <div class="stack-category fade-in"><span class="cat-chip"><i class="fa-solid fa-microchip"></i> AI / ML</span><div class="cat-line"></div></div>
+    <div class="tech-grid fade-in">
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-robot"></i></div><div class="tech-name">OpenAI</div><div class="tech-cat">LLM</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-link-slash"></i></div><div class="tech-name">LangChain</div><div class="tech-cat">AI Framework</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-horse" style="color:var(--accent)"></i></div><div class="tech-name">Ollama</div><div class="tech-cat">Local LLM</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-face-smile-wink"></i></div><div class="tech-name">HuggingFace</div><div class="tech-cat">Models Hub</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-satellite-dish"></i></div><div class="tech-name">Vercel AI SDK</div><div class="tech-cat">AI Streaming</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-globe"></i></div><div class="tech-name">Replicate</div><div class="tech-cat">Model API</div></div>
+    </div>
+    <div class="stack-category fade-in"><span class="cat-chip"><i class="fa-solid fa-cloud"></i> DevOps / Cloud</span><div class="cat-line"></div></div>
+    <div class="tech-grid fade-in">
+      <div class="tech-card"><div class="tech-icon"><i class="fa-brands fa-docker"></i></div><div class="tech-name">Docker</div><div class="tech-cat">Containers</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-dharmachakra"></i></div><div class="tech-name">Kubernetes</div><div class="tech-cat">Orchestration</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-brands fa-aws"></i></div><div class="tech-name">AWS</div><div class="tech-cat">Cloud</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-brands fa-github"></i></div><div class="tech-name">GitHub Actions</div><div class="tech-cat">CI/CD</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-chart-area"></i></div><div class="tech-name">Grafana</div><div class="tech-cat">Monitoring</div></div>
+      <div class="tech-card"><div class="tech-icon"><i class="fa-solid fa-vial-circle-check"></i></div><div class="tech-name">Terraform</div><div class="tech-cat">IaC</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <div class="section-inner">
+    <p class="section-label"><i class="fa-solid fa-circle-dot"></i> What we've built</p>
+    <h2 class="section-title">Featured Projects</h2>
+    <p class="section-sub">A selection of products, platforms, and tools we've shipped for clients and open-source.</p>
+    <div class="projects-grid">
+      <div class="project-card fade-in"><div class="project-thumb" style="background:linear-gradient(135deg,#080c10,#001a2e)"><i class="fa-solid fa-brain"></i></div><div class="project-body"><div class="project-tags"><span class="tag">Next.js</span><span class="tag">GPT-4</span><span class="tag">Pinecone</span></div><div class="project-title">NeuralDocs AI</div><div class="project-desc">Intelligent document analysis platform — query entire knowledge bases with natural language using RAG architecture and custom chunking pipelines.</div></div><div class="project-footer"><a class="project-link" href="#"><i class="fa-solid fa-arrow-right"></i> View Case Study</a><div class="project-meta"><span><i class="fa-solid fa-star"></i> 2.3k</span><span><i class="fa-solid fa-code-fork"></i> 341</span></div></div></div>
+      <div class="project-card fade-in"><div class="project-thumb" style="background:linear-gradient(135deg,#080c10,#1a0020)"><i class="fa-solid fa-rocket"></i></div><div class="project-body"><div class="project-tags"><span class="tag">React</span><span class="tag">FastAPI</span><span class="tag">Stripe</span></div><div class="project-title">LaunchKit SaaS</div><div class="project-desc">Full-featured SaaS boilerplate with auth, billing, multi-tenancy, and AI feature flags — go from idea to production in under 48 hours.</div></div><div class="project-footer"><a class="project-link" href="#"><i class="fa-solid fa-arrow-right"></i> View Case Study</a><div class="project-meta"><span><i class="fa-solid fa-star"></i> 4.1k</span><span><i class="fa-solid fa-code-fork"></i> 892</span></div></div></div>
+      <div class="project-card fade-in"><div class="project-thumb" style="background:linear-gradient(135deg,#080c10,#001f10)"><i class="fa-solid fa-chart-line"></i></div><div class="project-body"><div class="project-tags"><span class="tag">Vue 3</span><span class="tag">Python</span><span class="tag">Kafka</span></div><div class="project-title">DataStream Dashboard</div><div class="project-desc">Real-time analytics dashboard processing 10M+ events/day with AI-powered anomaly detection and automated report generation.</div></div><div class="project-footer"><a class="project-link" href="#"><i class="fa-solid fa-arrow-right"></i> View Case Study</a><div class="project-meta"><span><i class="fa-solid fa-star"></i> 890</span><span><i class="fa-solid fa-code-fork"></i> 120</span></div></div></div>
+      <div class="project-card fade-in"><div class="project-thumb" style="background:linear-gradient(135deg,#080c10,#1a1000)"><i class="fa-solid fa-bag-shopping"></i></div><div class="project-body"><div class="project-tags"><span class="tag">Next.js</span><span class="tag">Supabase</span><span class="tag">LangChain</span></div><div class="project-title">ShopMind Commerce</div><div class="project-desc">AI-first e-commerce platform with semantic product search, personalized recommendations, and an intelligent support chatbot.</div></div><div class="project-footer"><a class="project-link" href="#"><i class="fa-solid fa-arrow-right"></i> View Case Study</a><div class="project-meta"><span><i class="fa-solid fa-star"></i> 1.7k</span><span><i class="fa-solid fa-code-fork"></i> 203</span></div></div></div>
+      <div class="project-card fade-in"><div class="project-thumb" style="background:linear-gradient(135deg,#080c10,#150030)"><i class="fa-solid fa-microphone-lines"></i></div><div class="project-body"><div class="project-tags"><span class="tag">Bun</span><span class="tag">Whisper AI</span><span class="tag">WebRTC</span></div><div class="project-title">VoiceForge Studio</div><div class="project-desc">Browser-based voice transcription, translation, and AI cloning platform supporting 40+ languages with under 300ms latency.</div></div><div class="project-footer"><a class="project-link" href="#"><i class="fa-solid fa-arrow-right"></i> View Case Study</a><div class="project-meta"><span><i class="fa-solid fa-star"></i> 3.5k</span><span><i class="fa-solid fa-code-fork"></i> 611</span></div></div></div>
+      <div class="project-card fade-in"><div class="project-thumb" style="background:linear-gradient(135deg,#080c10,#001020)"><i class="fa-solid fa-lock"></i></div><div class="project-body"><div class="project-tags"><span class="tag">Rust</span><span class="tag">Zero-Trust</span><span class="tag">Kubernetes</span></div><div class="project-title">VaultGuard IAM</div><div class="project-desc">Enterprise-grade identity and access management with AI-based threat detection, RBAC, and real-time audit logs.</div></div><div class="project-footer"><a class="project-link" href="#"><i class="fa-solid fa-arrow-right"></i> View Case Study</a><div class="project-meta"><span><i class="fa-solid fa-star"></i> 620</span><span><i class="fa-solid fa-code-fork"></i> 88</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── REVIEWS ── -->
+<section id="reviews">
+  <div class="section-inner">
+    <p class="section-label"><i class="fa-solid fa-circle-dot"></i> Client feedback</p>
+    <h2 class="section-title">What People Say</h2>
+    <p class="section-sub">Real feedback from the teams and founders we've worked with.</p>
+    <div class="reviews-grid">
+      <div class="review-card fade-in"><div class="review-quote-icon"><i class="fa-solid fa-quote-left"></i></div><div class="stars">★★★★★</div><p class="review-text">Caffeine Coders delivered a production-ready AI platform in 6 weeks. Their grasp of LLM architecture is genuinely impressive — they built things our senior ML team hadn't considered.</p><div class="review-author"><div class="author-avatar"><i class="fa-solid fa-user-tie"></i></div><div><div class="author-name">Sarah Chen</div><div class="author-role">CTO @ Nebula Health</div></div></div></div>
+      <div class="review-card fade-in"><div class="review-quote-icon"><i class="fa-solid fa-quote-left"></i></div><div class="stars">★★★★★</div><p class="review-text">We went from a Figma prototype to a fully deployed SaaS with payments, auth, and AI features in under two months. The code quality is exceptional — clean, typed, tested.</p><div class="review-author"><div class="author-avatar"><i class="fa-solid fa-laptop-code"></i></div><div><div class="author-name">Marcus Wright</div><div class="author-role">Founder @ FlowStack</div></div></div></div>
+      <div class="review-card fade-in"><div class="review-quote-icon"><i class="fa-solid fa-quote-left"></i></div><div class="stars">★★★★★</div><p class="review-text">Our data pipeline was a mess of Python scripts. They rebuilt it as a Kafka-driven microservices architecture with real-time dashboards. Now we process 10x the volume at half the cost.</p><div class="review-author"><div class="author-avatar"><i class="fa-solid fa-flask"></i></div><div><div class="author-name">Dr. Yuki Tanaka</div><div class="author-role">Head of Eng @ DataRift</div></div></div></div>
+      <div class="review-card fade-in"><div class="review-quote-icon"><i class="fa-solid fa-quote-left"></i></div><div class="stars">★★★★☆</div><p class="review-text">The semantic search they built for our e-commerce store increased conversion by 34%. Their vector database setup with Pinecone was elegantly done. Will absolutely work with them again.</p><div class="review-author"><div class="author-avatar"><i class="fa-solid fa-chart-pie"></i></div><div><div class="author-name">Priya Sharma</div><div class="author-role">Product Lead @ Vestora</div></div></div></div>
+      <div class="review-card fade-in"><div class="review-quote-icon"><i class="fa-solid fa-quote-left"></i></div><div class="stars">★★★★★</div><p class="review-text">Top-tier communication throughout. They didn't just code — they consulted, challenged our assumptions, and shipped a more scalable solution than what we originally specced.</p><div class="review-author"><div class="author-avatar"><i class="fa-solid fa-briefcase"></i></div><div><div class="author-name">James O'Brien</div><div class="author-role">CEO @ PulseOps</div></div></div></div>
+      <div class="review-card fade-in"><div class="review-quote-icon"><i class="fa-solid fa-quote-left"></i></div><div class="stars">★★★★★</div><p class="review-text">They refactored our legacy monolith into a microservices architecture while keeping our app live. Zero downtime migration. That takes serious skill and planning.</p><div class="review-author"><div class="author-avatar"><i class="fa-solid fa-code"></i></div><div><div class="author-name">Elena Vasquez</div><div class="author-role">VP Engineering @ Loopify</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT (main) ── -->
+<section id="contact">
+  <div style="max-width:700px;margin:auto;text-align:center">
+    <p class="section-label" style="justify-content:center"><i class="fa-solid fa-circle-dot"></i> Get in touch</p>
+    <h2 class="section-title fade-in">Have a project in mind?</h2>
+    <p class="section-sub fade-in" style="text-align:center;margin:1rem auto 2.5rem">Let's build something extraordinary together. Tell us about your vision and we'll brew up a plan over a coffee (or three).</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap" class="fade-in">
+      <button class="btn-primary" onclick="showPage('contact')"><i class="fa-solid fa-mug-hot"></i>Start a Project</button>
+      <button class="btn-outline"><i class="fa-solid fa-envelope"></i>caffeinecoders7@gmail.com</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-marquee-bg"><div class="footer-marquee-text">CAFFEINE CODERS &nbsp;•&nbsp; CAFFEINE CODERS &nbsp;•&nbsp; CAFFEINE CODERS &nbsp;•&nbsp; CAFFEINE CODERS &nbsp;•&nbsp; CAFFEINE CODERS &nbsp;•&nbsp; CAFFEINE CODERS &nbsp;•&nbsp;</div></div>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo-txt" onclick="goHome()" style="margin-bottom:.5rem;font-family:'Oxanium',sans-serif;font-weight:800;font-size:1.4rem;color:var(--accent);display:flex;align-items:center;gap:.5rem;cursor:pointer"><i class="fa-solid fa-mug-hot"></i><span style="color:var(--text)">Caffeine</span><span>Coders</span></div>
+      <p>AI-powered full-stack development studio. We ship intelligent, scalable digital products — from MVP to enterprise.</p>
+      <br/>
+      <div style="font-family:'Poppins',sans-serif;font-size:.75rem;color:var(--accent);display:flex;align-items:center;gap:.5rem">
+        <i class="fa-solid fa-circle-dot" style="color:#28ca41;font-size:.6rem"></i>
+        STATUS: <span style="color:#28ca41">ALL SYSTEMS OPERATIONAL</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4><i class="fa-solid fa-gears"></i> Services</h4>
+      <ul>
+        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> AI Integration</a></li>
+        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Full-Stack Dev</a></li>
+        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> API Architecture</a></li>
+        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> DevOps &amp; Cloud</a></li>
+        <li><a href="#"><i class="fa-solid fa-chevron-right"></i> Tech Consulting</a></li>
+      </ul>
+    </div>
+   
+    <div class="footer-col">
+      <h4><i class="fa-solid fa-building"></i> Company</h4>
+      <ul>
+        <li><a onclick="showPage('about')" href="#about-us"><i class="fa-solid fa-chevron-right"></i> About Us</a></li>
+        <li><a onclick="showPage('careers')" href="#careers"><i class="fa-solid fa-chevron-right"></i> Careers</a></li>
+        <li><a onclick="showPage('contact')" href="#contact-page"><i class="fa-solid fa-chevron-right"></i> Contact</a></li>
+        <li><a onclick="showPage('privacy')" href="#privacy-policy"><i class="fa-solid fa-chevron-right"></i> Privacy Policy</a></li>
+        <li><a onclick="showPage('terms')" href="#terms-of-service"><i class="fa-solid fa-chevron-right"></i> Terms of Service</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p><i class="fa-solid fa-copyright"></i> 2026 Caffeine Coders. Built with <i class="fa-solid fa-mug-hot" style="color:var(--accent)"></i> &amp; too many late nights.</p>
+    <div class="social-links">
+      <a class="social-btn" href="#" title="GitHub"><i class="fa-brands fa-github"></i></a>
+      <a class="social-btn" href="#" title="Twitter/X"><i class="fa-brands fa-x-twitter"></i></a>
+      <a class="social-btn" href="#" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+      <a class="social-btn" href="#" title="Discord"><i class="fa-brands fa-discord"></i></a>
+      <a class="social-btn" href="#" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+    </div>
+  </div>
+</footer>
+</div><!-- end #main-content -->
+
+
+<!-- ══════════════════════════════════════════════
+     SPA COMPANY PAGES — only shown via hash routing
+══════════════════════════════════════════════ -->
+
+<!-- ── PAGE: ABOUT US ── -->
+<div class="company-page" id="page-about">
+  <div class="cp-hero">
+    <div class="cp-hero-inner">
+      <div class="cp-breadcrumb"><a onclick="goHome()"><i class="fa-solid fa-house"></i> Home</a><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Company <i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> About Us</div>
+      <div class="cp-title">We Are <span class="hl">Caffeine Coders</span></div>
+      <p class="cp-sub">A small team of engineers obsessed with building intelligent, production-grade software — powered by AI, great coffee, and zero shortcuts.</p>
+    </div>
+  </div>
+  <div class="cp-body">
+    <!-- Stats Row -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:4rem" class="spa-fade">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center"><div style="font-family:'Oxanium',sans-serif;font-size:2.4rem;font-weight:800;color:var(--accent)">2020</div><div style="font-family:'Poppins',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem">Founded</div></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center"><div style="font-family:'Oxanium',sans-serif;font-size:2.4rem;font-weight:800;color:var(--accent)">120+</div><div style="font-family:'Poppins',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem">Projects</div></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center"><div style="font-family:'Oxanium',sans-serif;font-size:2.4rem;font-weight:800;color:var(--accent)">47</div><div style="font-family:'Poppins',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem">Clients</div></div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center"><div style="font-family:'Oxanium',sans-serif;font-size:2.4rem;font-weight:800;color:var(--accent)">99%</div><div style="font-family:'Poppins',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.3rem">Uptime</div></div>
+    </div>
+    <!-- Mission -->
+    <div style="margin-bottom:4rem" class="spa-fade">
+      <p class="cp-label"><i class="fa-solid fa-circle-dot"></i> Our Mission</p>
+      <h2 class="cp-section-title">Build intelligent products that actually ship</h2>
+      <p style="color:var(--muted);line-height:1.85;font-size:.93rem;max-width:720px">Founded in 2020, Caffeine Coders started as two engineers tired of seeing AI remain locked inside research papers. We set out to bridge the gap between cutting-edge ML and production-ready software. Today we're a 6-person studio that has shipped 120+ products — from lean MVPs to enterprise systems serving millions of users. We don't do consulting fluff. We build things.</p>
+    </div>
+    <!-- Values -->
+    <div style="margin-bottom:4rem">
+      <p class="cp-label spa-fade"><i class="fa-solid fa-circle-dot"></i> What drives us</p>
+      <h2 class="cp-section-title spa-fade">Our Core Values</h2>
+      <div class="cp-grid-3" style="margin-top:1.5rem">
+        <div class="val-card spa-fade"><div class="val-icon"><i class="fa-solid fa-ship"></i></div><div class="val-text"><h4>Ship First</h4><p>A working product in production beats a perfect one on a whiteboard. We bias toward action.</p></div></div>
+        <div class="val-card spa-fade"><div class="val-icon"><i class="fa-solid fa-code"></i></div><div class="val-text"><h4>Code is Communication</h4><p>We write code that humans can read, maintain, and build on. Clean architecture is not optional.</p></div></div>
+        <div class="val-card spa-fade"><div class="val-icon"><i class="fa-solid fa-brain"></i></div><div class="val-text"><h4>AI-Native Thinking</h4><p>Every project starts with: where does AI create the most leverage? We embed intelligence by default.</p></div></div>
+        <div class="val-card spa-fade"><div class="val-icon"><i class="fa-solid fa-handshake"></i></div><div class="val-text"><h4>Radical Transparency</h4><p>No hidden costs, no surprise pivots. We tell clients what's working, what isn't, and what it takes to fix it.</p></div></div>
+        <div class="val-card spa-fade"><div class="val-icon"><i class="fa-solid fa-flask"></i></div><div class="val-text"><h4>Always Experimenting</h4><p>The stack that worked last year may not be optimal today. We stay curious and constantly evaluate new approaches.</p></div></div>
+        <div class="val-card spa-fade"><div class="val-icon"><i class="fa-solid fa-mug-hot"></i></div><div class="val-text"><h4>Caffeine-Fueled Focus</h4><p>We do deep work. No distractions, no fluff — just focused engineering sessions that produce results worth showing.</p></div></div>
+      </div>
+    </div>
+    <!-- Team -->
+    <div style="margin-bottom:3rem">
+      <p class="cp-label spa-fade"><i class="fa-solid fa-circle-dot"></i> The humans behind the code</p>
+      <h2 class="cp-section-title spa-fade">Meet the Team</h2>
+      <div class="cp-grid-3" style="margin-top:1.5rem">
+        <div class="team-card spa-fade"><div class="team-avatar"><i class="fa-solid fa-user-ninja"></i></div><div class="team-name">Alex Rivera</div><div class="team-role">Co-Founder &amp; CEO</div><div class="team-bio">Full-stack engineer turned AI enthusiast. Previously led engineering at two Series B startups. Drinks 6 coffees/day.</div></div>
+        <div class="team-card spa-fade"><div class="team-avatar"><i class="fa-solid fa-robot"></i></div><div class="team-name">Priya Nair</div><div class="team-role">Co-Founder &amp; CTO</div><div class="team-bio">ML researcher turned product engineer. Ex-Google Brain. Specialises in RAG systems and real-time inference pipelines.</div></div>
+        <div class="team-card spa-fade"><div class="team-avatar"><i class="fa-solid fa-paint-roller"></i></div><div class="team-name">Jordan Lee</div><div class="team-role">Lead Frontend Engineer</div><div class="team-bio">Obsessed with micro-interactions and pixel-perfect UIs. React wizard. Does motion design when not shipping features.</div></div>
+        <div class="team-card spa-fade"><div class="team-avatar"><i class="fa-solid fa-server"></i></div><div class="team-name">Sam Okafor</div><div class="team-role">Backend &amp; DevOps Lead</div><div class="team-bio">Kubernetes whisperer. Designed infrastructure serving 50M+ requests/month. Once awake 36hrs to fix a Kafka bug.</div></div>
+        <div class="team-card spa-fade"><div class="team-avatar"><i class="fa-solid fa-database"></i></div><div class="team-name">Mei Zhang</div><div class="team-role">Data &amp; AI Engineer</div><div class="team-bio">Turns raw data into intelligent products. PhD in NLP. Builds vector search pipelines that return relevant results.</div></div>
+        <div class="team-card spa-fade"><div class="team-avatar"><i class="fa-solid fa-shield-halved"></i></div><div class="team-name">Carlos Mendez</div><div class="team-role">Security &amp; QA Engineer</div><div class="team-bio">Ex-pen-tester turned product engineer. Finds bugs before your users do. Zero-trust is not a buzzword to him.</div></div>
+      </div>
+    </div>
+    <div class="cta-strip spa-fade">
+      <h2>Want to work with us?</h2>
+      <p>We're always open to interesting projects. Let's build something together.</p>
+      <div class="cta-btns"><button class="btn-primary" onclick="showPage('contact')"><i class="fa-solid fa-mug-hot"></i> Start a Project</button><button class="btn-outline" onclick="showPage('careers')"><i class="fa-solid fa-briefcase"></i> View Careers</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: CAREERS ── -->
+<div class="company-page" id="page-careers">
+  <div class="cp-hero">
+    <div class="cp-hero-inner">
+      <div class="cp-breadcrumb"><a onclick="goHome()"><i class="fa-solid fa-house"></i> Home</a><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Company <i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Careers</div>
+      <div class="cp-title">Join the <span class="hl">Caffeine Coders</span></div>
+      <p class="cp-sub">A small, high-output team building AI-native products. If you love deep work, clean code, and great coffee — you might fit right in.</p>
+    </div>
+  </div>
+  <div class="cp-body">
+    <!-- Perks -->
+    <p class="cp-label spa-fade"><i class="fa-solid fa-circle-dot"></i> Why work with us</p>
+    <h2 class="cp-section-title spa-fade">Life at Caffeine Coders</h2>
+    <div class="cp-grid-3" style="margin-top:1.5rem;margin-bottom:4rem">
+      <div class="perk-card spa-fade"><div class="perk-icon"><i class="fa-solid fa-earth-americas"></i></div><div class="perk-text"><h4>Fully Remote</h4><p>Work from anywhere. Async-first culture with minimal meetings.</p></div></div>
+      <div class="perk-card spa-fade"><div class="perk-icon"><i class="fa-solid fa-money-bill-trend-up"></i></div><div class="perk-text"><h4>Competitive Pay</h4><p>Market-rate salaries + profit sharing for senior roles.</p></div></div>
+      <div class="perk-card spa-fade"><div class="perk-icon"><i class="fa-solid fa-mug-hot"></i></div><div class="perk-text"><h4>Coffee Budget</h4><p>$50/month coffee stipend. Because obviously.</p></div></div>
+      <div class="perk-card spa-fade"><div class="perk-icon"><i class="fa-solid fa-graduation-cap"></i></div><div class="perk-text"><h4>Learning Budget</h4><p>$2,000/year for courses, conferences, and books.</p></div></div>
+      <div class="perk-card spa-fade"><div class="perk-icon"><i class="fa-solid fa-laptop"></i></div><div class="perk-text"><h4>Top-Tier Equipment</h4><p>MacBook Pro M3 + anything else you need to do your best work.</p></div></div>
+      <div class="perk-card spa-fade"><div class="perk-icon"><i class="fa-solid fa-umbrella-beach"></i></div><div class="perk-text"><h4>Unlimited PTO</h4><p>We mean it. Take time off when you need it.</p></div></div>
+      <div class="perk-card spa-fade"><div class="perk-icon"><i class="fa-solid fa-rocket"></i></div><div class="perk-text"><h4>Ship Real Things</h4><p>No fake projects. Everything you build goes to production.</p></div></div>
+      <div class="perk-card spa-fade"><div class="perk-icon"><i class="fa-solid fa-users"></i></div><div class="perk-text"><h4>Small Team, Big Impact</h4><p>Your work will have a direct and visible impact from day one.</p></div></div>
+    </div>
+    <!-- Roles -->
+    <p class="cp-label spa-fade"><i class="fa-solid fa-circle-dot"></i> Open positions</p>
+    <h2 class="cp-section-title spa-fade">We're Hiring</h2>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:2rem" class="spa-fade">All roles are remote-first. We hire based on craft, not credentials.</p>
+    <div style="display:flex;flex-direction:column;gap:1.2rem">
+      <div class="job-card spa-fade"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:.8rem"><div><div class="job-title">Senior Full-Stack Engineer</div><div class="job-dept"><i class="fa-solid fa-code"></i> Engineering</div></div><div class="job-badges"><span class="jbadge remote"><i class="fa-solid fa-globe"></i> Remote</span><span class="jbadge full">Full-Time</span></div></div><p class="job-desc">Build end-to-end features across our client stack. You'll own entire product surfaces from API design to UI, collaborate directly with clients, and ship weekly.</p><div class="skill-tags"><span class="skill-tag">Next.js</span><span class="skill-tag">TypeScript</span><span class="skill-tag">PostgreSQL</span><span class="skill-tag">tRPC</span><span class="skill-tag">Prisma</span></div><button class="btn-primary" style="font-size:.82rem;padding:.6rem 1.5rem" onclick="showPage('contact')"><i class="fa-solid fa-paper-plane"></i> Apply Now</button></div>
+      <div class="job-card spa-fade"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:.8rem"><div><div class="job-title">AI / ML Engineer</div><div class="job-dept"><i class="fa-solid fa-brain"></i> AI</div></div><div class="job-badges"><span class="jbadge remote"><i class="fa-solid fa-globe"></i> Remote</span><span class="jbadge full">Full-Time</span></div></div><p class="job-desc">Integrate LLMs into production products. Design RAG pipelines, fine-tune models, build evaluation frameworks, and make AI features users actually love.</p><div class="skill-tags"><span class="skill-tag">Python</span><span class="skill-tag">LangChain</span><span class="skill-tag">OpenAI API</span><span class="skill-tag">Pinecone</span><span class="skill-tag">FastAPI</span></div><button class="btn-primary" style="font-size:.82rem;padding:.6rem 1.5rem" onclick="showPage('contact')"><i class="fa-solid fa-paper-plane"></i> Apply Now</button></div>
+      <div class="job-card spa-fade"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:.8rem"><div><div class="job-title">DevOps / Cloud Engineer</div><div class="job-dept"><i class="fa-solid fa-cloud"></i> Infrastructure</div></div><div class="job-badges"><span class="jbadge remote"><i class="fa-solid fa-globe"></i> Remote</span><span class="jbadge contract">Contract</span></div></div><p class="job-desc">Design and maintain infrastructure powering our client products. Kubernetes, Terraform, GitHub Actions — build systems that scale without drama.</p><div class="skill-tags"><span class="skill-tag">Kubernetes</span><span class="skill-tag">AWS</span><span class="skill-tag">Terraform</span><span class="skill-tag">Docker</span><span class="skill-tag">Grafana</span></div><button class="btn-primary" style="font-size:.82rem;padding:.6rem 1.5rem" onclick="showPage('contact')"><i class="fa-solid fa-paper-plane"></i> Apply Now</button></div>
+      <div class="job-card spa-fade"><div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:.8rem"><div><div class="job-title">Frontend UI Engineer</div><div class="job-dept"><i class="fa-solid fa-desktop"></i> Engineering</div></div><div class="job-badges"><span class="jbadge remote"><i class="fa-solid fa-globe"></i> Remote</span><span class="jbadge full">Full-Time</span></div></div><p class="job-desc">Craft polished, accessible, performant React interfaces. You care about animations, spacing, interaction design, and lighthouse scores.</p><div class="skill-tags"><span class="skill-tag">React</span><span class="skill-tag">Framer Motion</span><span class="skill-tag">Tailwind</span><span class="skill-tag">TypeScript</span><span class="skill-tag">Figma</span></div><button class="btn-primary" style="font-size:.82rem;padding:.6rem 1.5rem" onclick="showPage('contact')"><i class="fa-solid fa-paper-plane"></i> Apply Now</button></div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center" class="spa-fade">
+        <i class="fa-solid fa-envelope-open-text" style="font-size:2rem;color:var(--accent);margin-bottom:1rem;display:block"></i>
+        <h3 style="font-family:'Oxanium',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.5rem">Don't see your role?</h3>
+        <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem">We're always interested in exceptional engineers. Send us your work and a note about what you'd build.</p>
+        <button class="btn-primary" style="margin:auto" onclick="showPage('contact')"><i class="fa-solid fa-mug-hot"></i> Reach Out</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: CONTACT ── -->
+<div class="company-page" id="page-contact">
+  <div class="cp-hero">
+    <div class="cp-hero-inner">
+      <div class="cp-breadcrumb"><a onclick="goHome()"><i class="fa-solid fa-house"></i> Home</a><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Company <i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Contact</div>
+      <div class="cp-title">Let's <span class="hl">Build Together</span></div>
+      <p class="cp-sub">Tell us about your project and we'll brew up a plan. We typically respond within 24 hours.</p>
+    </div>
+  </div>
+  <div class="cp-body">
+    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:3rem;align-items:start">
+      <!-- Info Column -->
+      <div>
+        <p class="cp-label spa-fade"><i class="fa-solid fa-circle-dot"></i> Get in touch</p>
+        <h2 class="cp-section-title spa-fade" style="margin-bottom:1.5rem">Contact Info</h2>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="cp-card spa-fade" style="display:flex;gap:1rem;align-items:flex-start;padding:1.2rem"><div style="width:40px;height:40px;border-radius:10px;background:rgba(0,136,255,.1);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0"><i class="fa-solid fa-envelope"></i></div><div><div style="font-family:'Oxanium',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.2rem">Email</div><div style="font-size:.85rem;color:var(--muted)">caffeinecoders7@gmail.com</div></div></div>
+          <div class="cp-card spa-fade" style="display:flex;gap:1rem;align-items:flex-start;padding:1.2rem"><div style="width:40px;height:40px;border-radius:10px;background:rgba(0,136,255,.1);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0"><i class="fa-brands fa-discord"></i></div><div><div style="font-family:'Oxanium',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.2rem">Discord</div><div style="font-size:.85rem;color:var(--muted)">discord.gg/caffeinecoders</div></div></div>
+          <div class="cp-card spa-fade" style="display:flex;gap:1rem;align-items:flex-start;padding:1.2rem"><div style="width:40px;height:40px;border-radius:10px;background:rgba(0,136,255,.1);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0"><i class="fa-brands fa-github"></i></div><div><div style="font-family:'Oxanium',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.2rem">GitHub</div><div style="font-size:.85rem;color:var(--muted)">github.com/caffeinecoders</div></div></div>
+          <div class="cp-card spa-fade" style="display:flex;gap:1rem;align-items:flex-start;padding:1.2rem"><div style="width:40px;height:40px;border-radius:10px;background:rgba(0,136,255,.1);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0"><i class="fa-solid fa-clock"></i></div><div><div style="font-family:'Oxanium',sans-serif;font-weight:700;font-size:.9rem;margin-bottom:.2rem">Response Time</div><div style="font-size:.85rem;color:var(--muted)">Within 24 hours, Mon–Fri</div></div></div>
+        </div>
+        <!-- Payment note -->
+        <div style="background:linear-gradient(135deg,rgba(0,136,255,.07),rgba(124,58,237,.05));border:1px solid var(--accent);border-radius:12px;padding:1.3rem;margin-top:1.5rem" class="spa-fade">
+          <div style="font-family:'Oxanium',sans-serif;font-weight:700;font-size:.9rem;color:var(--accent);display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem"><i class="fa-solid fa-circle-dollar-to-slot"></i> Payment Policy</div>
+          <p style="font-size:.82rem;color:var(--muted);line-height:1.7"><strong style="color:var(--text)">50% upfront</strong> to kick off your project. <strong style="color:var(--text)">50% on completion</strong> before final delivery. See our <a onclick="showPage('terms')" style="color:var(--accent);cursor:pointer;text-decoration:underline">Terms of Service</a> for full details.</p>
+        </div>
+      </div>
+      <!-- Form Column -->
+      <div class="cp-card spa-fade" style="padding:2rem">
+        <h3 style="font-family:'Oxanium',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem"><i class="fa-solid fa-paper-plane" style="color:var(--accent)"></i> Start a Project</h3>
+        <div class="cf-group"><label>Full Name</label><input type="text" class="cf-input" placeholder="Your name"></div>
+        <div class="cf-group"><label>Email Address</label><input type="email" class="cf-input" placeholder="you@company.com"></div>
+        <div class="cf-group"><label>Company / Project</label><input type="text" class="cf-input" placeholder="Company or project name"></div>
+        <div class="cf-group"><label>Budget Range</label>
+          <select class="cf-input" style="cursor:pointer">
+            <option value="" style="background:var(--bg)">Select a range...</option>
+            <option style="background:var(--bg)">Under $5,000</option>
+            <option style="background:var(--bg)">$5,000 – $15,000</option>
+            <option style="background:var(--bg)">$15,000 – $50,000</option>
+            <option style="background:var(--bg)">$50,000+</option>
+            <option style="background:var(--bg)">Let's discuss</option>
+          </select>
+        </div>
+        <div class="cf-group"><label>Tell us about your project</label><textarea class="cf-input" placeholder="Describe your idea, goals, timeline, and anything else that helps us understand what you need..."></textarea></div>
+        <button class="btn-primary" style="width:100%;justify-content:center" onclick="handleContactSubmit(this)"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+        <p style="font-size:.75rem;color:var(--muted);text-align:center;margin-top:.8rem"><i class="fa-solid fa-lock" style="font-size:.65rem"></i> Your info is private. By submitting you agree to our <a onclick="showPage('terms')" style="color:var(--accent);cursor:pointer">Terms</a> and <a onclick="showPage('privacy')" style="color:var(--accent);cursor:pointer">Privacy Policy</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: PRIVACY POLICY ── -->
+<div class="company-page" id="page-privacy">
+  <div class="cp-hero">
+    <div class="cp-hero-inner">
+      <div class="cp-breadcrumb"><a onclick="goHome()"><i class="fa-solid fa-house"></i> Home</a><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Company <i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Privacy Policy</div>
+      <div class="cp-title"><span class="hl">Privacy</span> Policy</div>
+      <p class="cp-sub">Last updated: January 1, 2026. We take your privacy seriously and are committed to protecting your personal data.</p>
+    </div>
+  </div>
+  <div class="cp-body">
+    <div style="max-width:820px">
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-circle-info"></i> 1. Introduction</h3><p>Welcome to Caffeine Coders ("we", "our", or "us"). This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or engage our services. Please read this policy carefully. If you disagree with its terms, please discontinue use of our site.</p></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-database"></i> 2. Information We Collect</h3><p>We may collect the following types of information:</p><ul style="margin-top:.6rem"><li><strong style="color:var(--text)">Personal Identification:</strong> Name, email address, phone number, company name when you contact us or fill out a form.</li><li><strong style="color:var(--text)">Technical Data:</strong> IP address, browser type, device information, pages visited, time spent on site.</li><li><strong style="color:var(--text)">Project Information:</strong> Details you share about your projects, business goals, and technical requirements.</li><li><strong style="color:var(--text)">Communication Data:</strong> Emails, messages, and correspondence between you and our team.</li></ul></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-gear"></i> 3. How We Use Your Information</h3><p>We use collected data to:</p><ul style="margin-top:.6rem"><li>Respond to inquiries and provide our development services</li><li>Send project updates, invoices, and relevant communications</li><li>Improve our website and service quality</li><li>Comply with legal obligations and protect our rights</li><li>Analyse website usage patterns (anonymised) to enhance user experience</li></ul></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-share-nodes"></i> 4. Data Sharing</h3><p>We do not sell, trade, or rent your personal information. We may share data with:</p><ul style="margin-top:.6rem"><li><strong style="color:var(--text)">Service Providers:</strong> Third-party tools (e.g., email, hosting, analytics) necessary to operate our services.</li><li><strong style="color:var(--text)">Legal Requirements:</strong> When required by law, court order, or government regulation.</li><li><strong style="color:var(--text)">Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets.</li></ul></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-cookie-bite"></i> 5. Cookies</h3><p>We use essential cookies to ensure our website functions correctly. We do not use advertising or third-party tracking cookies. You can disable cookies in your browser settings, though this may affect certain site functionality.</p></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-shield-halved"></i> 6. Data Security</h3><p>We implement industry-standard security measures including SSL/TLS encryption, secure server infrastructure, and restricted access controls. However, no method of transmission over the internet is 100% secure. We cannot guarantee absolute security but we strive to protect your information using commercially acceptable means.</p></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-person-circle-check"></i> 7. Your Rights</h3><p>Depending on your jurisdiction, you may have the right to:</p><ul style="margin-top:.6rem"><li>Access the personal data we hold about you</li><li>Request correction of inaccurate data</li><li>Request deletion of your personal data ("right to be forgotten")</li><li>Object to or restrict processing of your data</li><li>Data portability — receive your data in a structured format</li></ul><p style="margin-top:.7rem">To exercise these rights, contact us at caffeinecoders7@gmail.com.</p></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-calendar-days"></i> 8. Data Retention</h3><p>We retain personal data for as long as necessary to provide our services and comply with legal obligations — typically 5 years after the end of a client engagement. Project files and source code are deleted from our servers 90 days after final delivery unless agreed otherwise.</p></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-rotate"></i> 9. Changes to This Policy</h3><p>We may update this Privacy Policy periodically. We will notify you of significant changes via email or a prominent notice on our website. Your continued use of our services after changes are made constitutes acceptance of the updated policy.</p></div>
+      <div class="priv-section spa-fade"><h3><i class="fa-solid fa-envelope"></i> 10. Contact Us</h3><p>For privacy-related questions or requests, contact us at:<br/><a href="mailto:caffeinecoders7@gmail.com" style="color:var(--accent)">caffeinecoders7@gmail.com</a></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: TERMS OF SERVICE ── -->
+<div class="company-page" id="page-terms">
+  <div class="cp-hero">
+    <div class="cp-hero-inner">
+      <div class="cp-breadcrumb"><a onclick="goHome()"><i class="fa-solid fa-house"></i> Home</a><i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Company <i class="fa-solid fa-chevron-right" style="font-size:.55rem"></i> Terms of Service</div>
+      <div class="cp-title">Terms of <span class="hl">Service</span></div>
+      <p class="cp-sub">Last updated: January 1, 2026. Please read these terms carefully before engaging our services.</p>
+    </div>
+  </div>
+  <div class="cp-body">
+    <div style="max-width:820px">
+
+      <!-- Payment Policy Highlight Box -->
+      <div class="pay-box spa-fade">
+        <h3><i class="fa-solid fa-circle-dollar-to-slot"></i> Payment Policy — Summary</h3>
+        <div class="pay-steps">
+          <div class="pay-step">
+            <div class="pay-step-num">1</div>
+            <h4><i class="fa-solid fa-play" style="color:var(--accent);font-size:.7rem"></i> Project Kickoff Payment</h4>
+            <p>Required before any work begins. Covers project scoping, architecture design, initial setup, and the first development sprint.</p>
+            <span class="amt">50% of agreed total</span>
+          </div>
+          <div class="pay-step">
+            <div class="pay-step-num">2</div>
+            <h4><i class="fa-solid fa-flag-checkered" style="color:var(--accent);font-size:.7rem"></i> Final Delivery Payment</h4>
+            <p>Due upon project completion, before source code and final deliverables are transferred to the client. No exceptions.</p>
+            <span class="amt">Remaining 50%</span>
+          </div>
+        </div>
+        <p style="font-size:.82rem;color:var(--muted);margin-top:1rem;line-height:1.7"><i class="fa-solid fa-triangle-exclamation" style="color:#ffbd2e"></i> <strong style="color:var(--text)">Important:</strong> Work will not commence until the 50% deposit is received and cleared. The completed project, source code, and all deliverables will not be transferred until the remaining 50% is paid in full.</p>
+      </div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-file-contract"></i> 1. Agreement to Terms</h3><p>By engaging Caffeine Coders for development services, you agree to be bound by these Terms of Service. These terms constitute a legally binding agreement between you (the "Client") and Caffeine Coders ("we", "us", "the Studio"). If you do not agree to these terms, do not engage our services.</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-briefcase"></i> 2. Services</h3><p>Caffeine Coders provides software development services including but not limited to: full-stack web application development, AI/ML integration, API design and development, DevOps and cloud infrastructure setup, and technical consulting.</p><p>All services are provided on a project basis unless otherwise agreed in writing. The specific scope, deliverables, timeline, and fees for each project are defined in a separate Project Agreement or Statement of Work (SOW).</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-circle-dollar-to-slot"></i> 3. Payment Terms</h3><p><strong style="color:var(--text)">3.1 Deposit (50% Upfront):</strong> A non-refundable deposit of 50% of the total project fee is required before any work commences. This deposit secures your project slot and covers initial work including scoping, architecture, and sprint 1 development.</p><p><strong style="color:var(--text)">3.2 Final Payment (50% on Completion):</strong> The remaining 50% of the project fee is due upon project completion and before final delivery. "Completion" is defined as the point at which all agreed deliverables have been built and are ready for handover.</p><p><strong style="color:var(--text)">3.3 Delivery Withheld:</strong> Source code, project files, deployment credentials, and all deliverables will be withheld until the final payment has been received and cleared. We reserve the right to retain all intellectual property until payment is made in full.</p><p><strong style="color:var(--text)">3.4 Late Payment:</strong> Invoices unpaid for more than 14 days after the due date are subject to a late fee of 2% per month on the outstanding balance.</p><p><strong style="color:var(--text)">3.5 Currency:</strong> All invoices are issued in USD unless otherwise agreed in writing.</p><ul style="margin-top:.8rem"><li>Payment methods accepted: Bank transfer, PayPal, Stripe, Wise</li><li>Cryptocurrency accepted upon prior agreement</li><li>International wire transfer fees are the responsibility of the client</li></ul></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-arrows-spin"></i> 4. Project Scope &amp; Changes</h3><p>The scope of work is defined in the Project Agreement. Any changes or additions to the agreed scope ("scope creep") will be quoted separately and must be approved in writing before work begins. Changes may affect timeline and cost.</p><p>We reserve the right to adjust timelines if scope changes are requested mid-project.</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-copyright"></i> 5. Intellectual Property</h3><p><strong style="color:var(--text)">5.1 Client Ownership:</strong> Upon receipt of full payment, the Client owns all custom code, designs, and deliverables produced for the project.</p><p><strong style="color:var(--text)">5.2 Studio Portfolio:</strong> We reserve the right to showcase completed work in our portfolio unless explicitly agreed otherwise in writing.</p><p><strong style="color:var(--text)">5.3 Third-Party Assets:</strong> Open-source libraries, third-party APIs, and frameworks used in the project remain subject to their respective licenses.</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-rotate-left"></i> 6. Revisions</h3><p>Each project includes a defined number of revision rounds as specified in the Project Agreement (typically 2 rounds of revisions). Revision requests must be submitted within 14 days of deliverable completion. Additional revisions beyond the agreed scope are billed at our standard hourly rate.</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-ban"></i> 7. Cancellation Policy</h3><p><strong style="color:var(--text)">7.1 Client Cancellation:</strong> If the Client cancels a project after work has commenced, the 50% deposit is non-refundable. Any work completed beyond the deposit amount will be billed pro-rata.</p><p><strong style="color:var(--text)">7.2 Studio Cancellation:</strong> If we are unable to complete a project due to circumstances on our end, we will refund any fees paid for work not yet completed.</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-triangle-exclamation"></i> 8. Limitation of Liability</h3><p>Caffeine Coders shall not be liable for any indirect, incidental, special, or consequential damages arising from the use or inability to use our deliverables. Our total liability shall not exceed the total fees paid by the Client for the specific project giving rise to the claim.</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-lock"></i> 9. Confidentiality</h3><p>Both parties agree to keep confidential any proprietary information shared during the engagement. We will not disclose client business information, technical details, or project specifics to third parties without explicit written consent, except as required by law.</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-scale-balanced"></i> 10. Governing Law</h3><p>These Terms shall be governed by and construed in accordance with applicable law. Any disputes shall first be attempted to be resolved through good-faith negotiation. If unresolved, disputes shall be submitted to binding arbitration.</p></div>
+
+      <div class="terms-section spa-fade"><h3><i class="fa-solid fa-envelope"></i> 11. Contact for Legal Matters</h3><p>For questions regarding these Terms of Service, contact us at:<br/><a href="mailto:caffeinecoders7@gmail.com" style="color:var(--accent)">caffeinecoders7@gmail.com</a></p></div>
+
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-top:2rem" class="spa-fade">
+        <p style="font-size:.82rem;color:var(--muted);line-height:1.7;text-align:center"><i class="fa-solid fa-circle-info" style="color:var(--accent)"></i> By engaging Caffeine Coders services, you acknowledge that you have read, understood, and agreed to these Terms of Service in their entirety.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════════════ -->
+<script>
+  /* ── MARQUEE BG ── */
+  (function(){
+    const bg=document.getElementById('marqueeBg');
+    const words=['CAFFEINE CODERS','FULL STACK','AI POWERED','WE BUILD','SHIP IT','CLEAN CODE','REACT','NEXT.JS','NODE.JS','PYTHON','LLM','TYPESCRIPT'];
+    const lh=48,lines=Math.ceil(window.innerHeight/lh)+2;
+    for(let i=0;i<lines;i++){
+      const row=document.createElement('div');
+      row.className='marquee-row';row.style.height=lh+'px';row.style.lineHeight=lh+'px';
+      let c='';
+      for(let j=0;j<6;j++) c+=words.map(w=>`<span>${w}</span>`).join('');
+      row.innerHTML=c+c;bg.appendChild(row);
+    }
+  })();
+
+  /* ── THEME TOGGLE ── */
+  function toggleTheme(){
+    const h=document.documentElement,dark=h.getAttribute('data-theme')==='dark';
+    h.setAttribute('data-theme',dark?'light':'dark');
+    document.getElementById('themeIcon').className=dark?'fa-solid fa-sun':'fa-solid fa-moon';
+    document.getElementById('themeLabel').textContent=dark?'Light':'Dark';
+    localStorage.setItem('cc-theme',dark?'light':'dark');
+  }
+  // Restore saved theme
+  (function(){
+    const saved=localStorage.getItem('cc-theme');
+    if(saved){
+      document.documentElement.setAttribute('data-theme',saved);
+      document.getElementById('themeIcon').className=saved==='light'?'fa-solid fa-sun':'fa-solid fa-moon';
+      document.getElementById('themeLabel').textContent=saved==='light'?'Light':'Dark';
+    }
+  })();
+
+  /* ── SCROLL PROGRESS ── */
+  window.addEventListener('scroll',()=>{
+    const s=document.documentElement;
+    document.getElementById('scrollLine').style.width=((s.scrollTop/(s.scrollHeight-s.clientHeight))*100)+'%';
+  });
+
+  /* ── SCROLL-TRIGGERED FADE (main page) ── */
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){e.target.style.transitionDelay=(i*.08)+'s';e.target.classList.add('visible');obs.unobserve(e.target);}
+    });
+  },{threshold:.1});
+  document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+
+  /* ── COUNT-UP ── */
+  function countUp(){
+    document.querySelectorAll('[data-target]').forEach(el=>{
+      const t=+el.getAttribute('data-target'),suf=el.getAttribute('data-suffix')||'+';
+      let c=0;const step=Math.ceil(t/60);
+      const iv=setInterval(()=>{c=Math.min(c+step,t);el.textContent=c+suf;if(c>=t)clearInterval(iv);},25);
+    });
+  }
+  const sObs=new IntersectionObserver(e=>{if(e[0].isIntersecting){countUp();sObs.disconnect();}},{threshold:.3});
+  if(document.querySelector('.stats-bar')) sObs.observe(document.querySelector('.stats-bar'));
+
+  /* ── SMOOTH SCROLL (main page) ── */
+  function scrollTo(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+
+  /* ══════════════════════════════════════════════
+     SPA ROUTING — show/hide company pages + URL hash
+  ══════════════════════════════════════════════ */
+  const PAGE_MAP={
+    'about-us':    'page-about',
+    'careers':     'page-careers',
+    'contact-page':'page-contact',
+    'privacy-policy':'page-privacy',
+    'terms-of-service':'page-terms'
+  };
+  const PAGE_TITLES={
+    'about-us':    'About Us — Caffeine Coders',
+    'careers':     'Careers — Caffeine Coders',
+    'contact-page':'Contact — Caffeine Coders',
+    'privacy-policy':'Privacy Policy — Caffeine Coders',
+    'terms-of-service':'Terms of Service — Caffeine Coders'
+  };
+  // Internal showPage keys map
+  const SHOW_MAP={
+    'about':   'about-us',
+    'careers': 'careers',
+    'contact': 'contact-page',
+    'privacy': 'privacy-policy',
+    'terms':   'terms-of-service'
+  };
+
+  let currentPage=null;
+
+  function showPage(key){
+    const hashKey=SHOW_MAP[key]||key;
+    window.location.hash=hashKey;
+  }
+
+  function goHome(){
+    window.location.hash='';
+  }
+
+  function activatePage(hash){
+    // Hide all company pages
+    document.querySelectorAll('.company-page').forEach(p=>{p.classList.remove('active');});
+    const pageId=PAGE_MAP[hash];
+    if(pageId){
+      // Hide main content
+      document.getElementById('main-content').style.display='none';
+      // Show target page
+      const page=document.getElementById(pageId);
+      if(page){
+        page.classList.add('active');
+        document.title=PAGE_TITLES[hash]||'Caffeine Coders';
+        window.scrollTo({top:0,behavior:'smooth'});
+        currentPage=hash;
+        // Trigger spa-fade animations
+        setTimeout(()=>{
+          page.querySelectorAll('.spa-fade').forEach((el,i)=>{
+            setTimeout(()=>el.classList.add('on'),i*60);
+          });
+        },50);
+      }
+    } else {
+      // Show main content
+      document.getElementById('main-content').style.display='';
+      document.title='Caffeine Coders — AI-Powered Full Stack';
+      currentPage=null;
+      // Re-init fade-ins on main
+      document.querySelectorAll('#main-content .fade-in').forEach(el=>{
+        if(!el.classList.contains('visible')){obs.observe(el);}
+      });
+    }
+  }
+
+  // Handle hash changes (back/forward, link clicks)
+  window.addEventListener('hashchange',()=>{
+    const hash=window.location.hash.replace('#','');
+    activatePage(hash);
+  });
+
+  // On load, check hash
+  (function(){
+    const hash=window.location.hash.replace('#','');
+    if(hash && PAGE_MAP[hash]){
+      activatePage(hash);
+    }
+  })();
+
+  /* ── CONTACT FORM SUBMIT ── */
+  function handleContactSubmit(btn){
+    btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+    btn.disabled=true;
+    setTimeout(()=>{
+      btn.innerHTML='<i class="fa-solid fa-circle-check"></i> Message Sent!';
+      btn.style.background='#28ca41';
+      btn.style.color='#000';
+      setTimeout(()=>{
+        btn.innerHTML='<i class="fa-solid fa-paper-plane"></i> Send Message';
+        btn.style.background='';btn.style.color='';btn.disabled=false;
+      },3000);
+    },1500);
+  }
+</script>
+</body>
+</html>
